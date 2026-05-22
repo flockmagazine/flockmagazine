@@ -28,9 +28,12 @@
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
-      width: fit-content;
       font-family: 'Teko', sans-serif;
       line-height: 0.85;
+
+      /* FIX: prevents mobile centering issues */
+      display: block;
+      width: 100%;
     }
 
     /* =========================
@@ -41,8 +44,7 @@
       color: #666;
       margin: 0 auto 50px auto;
       font-size: 25px;
-      width: fit-content;
-      max-width: 90%;
+      width: 100%;
       font-family: 'IBM Plex Mono', monospace;
       text-transform: uppercase;
       letter-spacing: 1.5px;
@@ -82,9 +84,7 @@
       padding: 20px;
     }
 
-    /* =========================
-       ISSUE LABEL (ISSUE 01)
-    ========================== */
+    /* ISSUE LABEL */
     .content h2 {
       margin: 0 0 10px;
       font-size: 18px;
@@ -94,15 +94,28 @@
       font-weight: 600;
     }
 
-    /* =========================
-       ISSUE DESCRIPTION
-    ========================== */
+    /* DESCRIPTION */
     .content p {
       margin: 0;
       color: #666;
       line-height: 1.5;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 15px;
+    }
+
+    /* =========================
+       MOBILE FIXES
+    ========================== */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 110px;
+        letter-spacing: 2px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        padding: 0 10px;
+      }
     }
   </style>
 </head>
