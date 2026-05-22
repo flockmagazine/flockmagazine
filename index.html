@@ -1,11 +1,122 @@
-h1 {
-  text-align: center;
-  margin: 0 auto 10px auto;
-  font-size: 220px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  width: fit-content;
-  font-family: 'Teko', sans-serif;
-  line-height: 0.85;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>FLOCK</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f1ea;
+      margin: 0;
+      padding: 40px 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 auto 10px auto;
+      font-size: 198px; /* 10% smaller than 220px */
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      width: fit-content;
+      font-family: 'Teko', sans-serif;
+      line-height: 0.85;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin: 0 auto 50px auto;
+      font-size: 25px; /* 25% smaller than 34px */
+      width: fit-content;
+      max-width: 90%;
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      line-height: 1.2;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .issue {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+
+    .issue:hover {
+      transform: translateY(-5px);
+    }
+
+    .cover {
+      width: 100%;
+      display: block;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .content p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>FLOCK</h1>
+
+  <p class="subtitle">
+    THE BIRDWATCHING MAGAZINE
+  </p>
+
+  <div class="grid">
+
+    <a class="issue" href="flock-issue-01-may-2026.pdf" target="_blank">
+
+      <img
+        class="cover"
+        src="flock-issue-01-may-2026-cover-page.jpg"
+        alt="Flock Magazine Issue 01 Cover"
+      >
+
+      <div class="content">
+        <h2>Issue 01</h2>
+
+        <p>
+          A Guide to Birdwatching in the UK
+        </p>
+      </div>
+
+    </a>
+
+  </div>
+
+</body>
+</html>
