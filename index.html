@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Flock Magazine</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f1ea;
+      margin: 0;
+      padding: 40px 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 42px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 50px;
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .issue {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+
+    .issue:hover {
+      transform: translateY(-5px);
+    }
+
+    .cover {
+      width: 100%;
+      display: block;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .content p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Flock Magazine</h1>
+
+  <p class="subtitle">
+    Birds, wildlife, field notes & seasonal stories.
+  </p>
+
+  <div class="grid">
+
+    <a class="issue" href="flock-issue-01-may-2026.pdf" target="_blank">
+
+      <img
+        class="cover"
+        src="flock-issue-01-may-2026-cover-page.jpg"
+        alt="Flock Magazine Issue 01 Cover"
+      >
+
+      <div class="content">
+        <h2>Issue 01</h2>
+
+        <p>
+          May 2026 edition.
+          Tap to read online.
+        </p>
+      </div>
+
+    </a>
+
+  </div>
+
+</body>
+</html>
