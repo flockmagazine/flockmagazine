@@ -19,7 +19,7 @@
     }
 
     /* =========================
-       TITLE (DESKTOP FIXED)
+       TITLE (DESKTOP — UNCHANGED)
     ========================== */
 
     h1 {
@@ -31,8 +31,8 @@
       text-transform: uppercase;
       font-family: 'Teko', sans-serif;
       line-height: 0.85;
-      cursor: pointer;
       width: 100%;
+      cursor: pointer;
       transition: transform 0.25s ease;
     }
 
@@ -70,7 +70,7 @@
     }
 
     /* =========================
-       ISSUE CARD (DESKTOP BASE)
+       ISSUE CARD
     ========================== */
 
     .issue {
@@ -120,7 +120,7 @@
     }
 
     /* =========================
-       MOBILE FIX (CRITICAL)
+       MOBILE — EDGE HUGGING TITLE FIX
     ========================== */
 
     @media (max-width: 600px) {
@@ -130,7 +130,11 @@
       }
 
       h1 {
-        font-size: 22vw;
+        font-size: min(30vw, 180px);
+        letter-spacing: 0.5px;
+        width: 100%;
+        padding: 0 4vw;
+        box-sizing: border-box;
       }
 
       .subtitle {
@@ -143,7 +147,6 @@
         max-width: 100%;
       }
 
-      /* 🔥 KEY FIX: card always fits screen */
       .issue {
         height: calc(100vh - 180px);
         display: flex;
@@ -169,6 +172,7 @@
       .content p {
         font-size: 13px;
       }
+
     }
 
   </style>
