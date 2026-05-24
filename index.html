@@ -15,29 +15,32 @@ body {
   padding: 40px 20px;
   background: #f4f1ea;
   font-family: Arial, sans-serif;
-  color: #222;
 }
 
-/* TITLE */
+/* TITLE (DESKTOP BIGGER) */
 h1 {
   text-align: center;
   font-family: "Teko", sans-serif;
-  font-size: 160px;
+  font-size: 200px; /* +25% bigger */
   margin: 0;
-  letter-spacing: 3px;
   line-height: 0.9;
+  letter-spacing: 3px;
 }
 
-/* SUBTITLE */
+/* MOBILE ADJUST */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 140px;
+  }
+}
+
 .subtitle {
   text-align: center;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 20px;
-  margin: 10px 0 50px;
+  margin-bottom: 50px;
   color: #666;
 }
 
-/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -46,7 +49,6 @@ h1 {
   gap: 20px;
 }
 
-/* ISSUE CARD */
 .issue {
   background: white;
   border-radius: 14px;
@@ -54,12 +56,11 @@ h1 {
   text-decoration: none;
   color: inherit;
   box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .issue:hover {
   transform: translateY(-6px) scale(1.04);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
 }
 
 .cover {
@@ -72,18 +73,6 @@ h1 {
   font-family: "IBM Plex Mono", monospace;
 }
 
-.content h2 {
-  margin: 0 0 8px;
-  font-size: 16px;
-  letter-spacing: 2px;
-}
-
-.content p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-}
-
 </style>
 </head>
 
@@ -93,15 +82,12 @@ h1 {
 <p class="subtitle">THE BIRDWATCHING MAGAZINE</p>
 
 <div class="grid">
-
   <a class="issue" href="issues/issue-01/">
-    <img class="cover" src="issues/issue-01/page-01.jpg" alt="Issue 01 Cover">
+    <img class="cover" src="issues/issue-01/page-01.jpg">
     <div class="content">
-      <h2>ISSUE 01</h2>
-      <p>A Guide to Birdwatching in the UK</p>
+      ISSUE 01
     </div>
   </a>
-
 </div>
 
 </body>
