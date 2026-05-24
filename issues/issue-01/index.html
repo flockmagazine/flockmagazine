@@ -33,7 +33,7 @@ body {
 }
 
 /* =========================
-   TITLE (FIXED MOBILE SIZE + POSITION)
+   TITLE
 ========================= */
 
 .brand {
@@ -48,19 +48,22 @@ body {
   z-index: 9999;
 }
 
-/* MOBILE TITLE FIX */
+/* hide ONLY in fullscreen (desktop fix) */
+:fullscreen .brand {
+  display: none;
+}
+
+/* MOBILE TITLE */
 @media (max-width: 900px) {
   .brand {
-    font-size: 18px;      /* 🔥 FIX: much smaller */
-    top: 10px;
+    font-size: 18px;
+    top: 12px;
     left: 12px;
-    transform: none;
-    width: auto;
   }
 }
 
 /* =========================
-   VIEWPORT (FIX MOBILE OVERLAP)
+   VIEWER
 ========================= */
 
 .viewer {
@@ -69,25 +72,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-/* MOBILE SAFE AREA (prevents overlap even when zoomed) */
-@media (max-width: 900px) {
-  .viewer {
-    padding-top: 50px; /* space for title */
-    box-sizing: border-box;
-  }
-}
-
-/* =========================
-   BOOK
-========================= */
-
+/* BOOK */
 .book {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  transform-origin: center center;
 }
 
 /* PAGE */
@@ -99,15 +93,16 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
-/* MOBILE = SINGLE PAGE ONLY */
+/* MOBILE */
 @media (max-width: 900px) {
+
   .book {
     flex-direction: column;
   }
 
   .page {
     max-width: 100vw;
-    max-height: calc(100vh - 80px); /* prevents overlap */
+    max-height: calc(100vh - 90px);
     border-radius: 0;
   }
 }
@@ -118,7 +113,7 @@ body {
 
 .counter {
   position: fixed;
-  top: 18px;
+  top: 14px;
   right: 18px;
   color: var(--ui);
   font-family: system-ui;
@@ -150,7 +145,7 @@ body {
 }
 
 /* =========================
-   FULLSCREEN BUTTON (TOGGLE ONLY)
+   FULLSCREEN BUTTON
 ========================= */
 
 .fs-btn {
@@ -200,7 +195,15 @@ const pages = Array.from({ length: 19 }, (_, i) =>
 let current = 0;
 
 /* =========================
-   RENDER (FIXED LOGIC)
+   ZOOM / PAN (DESKTOP FULLSCREEN ONLY)
+========================= */
+
+let scale = 1;
+let panX = 0;
+let panY = 0;
+
+/* =========================
+   RENDER
 ========================= */
 
 function render() {
@@ -211,10 +214,6 @@ function render() {
   book.innerHTML = "";
 
   const mobile = window.innerWidth <= 900;
-
-  /* =========================
-     MOBILE = SINGLE PAGE ALWAYS
-  ========================= */
 
   if (mobile) {
 
@@ -228,16 +227,12 @@ function render() {
     return;
   }
 
-  /* =========================
-     DESKTOP = PAGE 1 SINGLE, THEN SPREADS
-  ========================= */
-
+  // DESKTOP SPREAD LOGIC
   if (current === 0) {
 
     const img = document.createElement("img");
     img.src = pages[0];
     img.className = "page";
-
     book.appendChild(img);
 
     counter.innerText = `1/${pages.length}`;
@@ -269,17 +264,19 @@ function render() {
 function next() {
   if (current === 0) current = 1;
   else if (current < pages.length - 2) current += 2;
+  resetZoom();
   render();
 }
 
 function prev() {
   if (current === 1) current = 0;
   else if (current > 1) current -= 2;
+  resetZoom();
   render();
 }
 
 /* =========================
-   FULLSCREEN TOGGLE FIX
+   FULLSCREEN TOGGLE
 ========================= */
 
 function toggleFullscreen() {
@@ -287,24 +284,98 @@ function toggleFullscreen() {
   const btn = document.getElementById("fsBtn");
 
   if (!document.fullscreenElement) {
-
     document.documentElement.requestFullscreen();
     btn.innerText = "Exit Fullscreen";
-
   } else {
-
     document.exitFullscreen();
     btn.innerText = "Fullscreen";
   }
 }
 
-/* RESET BUTTON ON ESC */
-document.addEventListener("fullscreenchange", () => {
-  const btn = document.getElementById("fsBtn");
-  btn.innerText = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
+/* =========================
+   RESET ZOOM
+========================= */
+
+function resetZoom() {
+  scale = 1;
+  panX = 0;
+  panY = 0;
+  applyTransform();
+}
+
+/* =========================
+   APPLY TRANSFORM
+========================= */
+
+function applyTransform() {
+  document.getElementById("book").style.transform =
+    `translate(${panX}px, ${panY}px) scale(${scale})`;
+}
+
+/* =========================
+   DESKTOP FULLSCREEN ZOOM + PAN
+========================= */
+
+window.addEventListener("wheel", (e) => {
+
+  if (!document.fullscreenElement) return;
+  if (window.innerWidth <= 900) return;
+
+  // ZOOM
+  if (e.ctrlKey) {
+
+    scale += -e.deltaY * 0.01;
+    scale = Math.min(Math.max(1, scale), 4);
+
+    applyTransform();
+    return;
+  }
+
+  // PAN
+  if (scale > 1) {
+    panX -= e.deltaX;
+    panY -= e.deltaY;
+    applyTransform();
+  }
+});
+
+/* =========================
+   MOBILE SWIPE
+========================= */
+
+let startX = 0;
+
+window.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+
+window.addEventListener("touchend", e => {
+
+  if (window.innerWidth > 900) return;
+
+  const dx = e.changedTouches[0].clientX - startX;
+
+  if (dx < -50) next();
+  if (dx > 50) prev();
+});
+
+/* =========================
+   TAP NAV (MOBILE)
+========================= */
+
+window.addEventListener("click", e => {
+
+  if (window.innerWidth > 900) return;
+
+  const x = e.clientX;
+  const w = window.innerWidth;
+
+  if (x > w * 0.6) next();
+  else if (x < w * 0.4) prev();
 });
 
 /* INIT */
+
 render();
 
 </script>
