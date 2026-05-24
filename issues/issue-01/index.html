@@ -6,20 +6,19 @@
 
 <title>FLOCK Reader</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 
 :root {
   --bg: #111;
-  --ui: #ffffff;
-  --ui-invert: #000000;
+  --ui: white;
 }
 
-/* AUTO LIGHT MODE DETECTION */
 @media (prefers-color-scheme: light) {
   :root {
     --bg: #f4f1ea;
-    --ui: #000000;
-    --ui-invert: #ffffff;
+    --ui: black;
   }
 }
 
@@ -31,22 +30,25 @@ body {
 }
 
 /* =========================
-   TOP LEFT BRAND BUTTON
+   BIG FLOCK TITLE (FIXED)
 ========================= */
 
 .brand {
   position: fixed;
-  top: 18px;
+  top: 10px;
   left: 18px;
+  font-family: "Teko", sans-serif;
+  font-size: 90px; /* ~5x bigger than before */
   font-weight: 700;
-  letter-spacing: 2px;
-  cursor: pointer;
+  letter-spacing: 3px;
   color: var(--ui);
+  cursor: pointer;
   z-index: 9999;
+  line-height: 0.8;
 }
 
 /* =========================
-   VIEWER
+   VIEWER SCALE (for zoom)
 ========================= */
 
 .viewer {
@@ -55,7 +57,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  perspective: 2200px;
+  transform-origin: center;
 }
 
 /* =========================
@@ -64,30 +66,21 @@ body {
 
 .book {
   display: flex;
-  transform-style: preserve-3d;
+  gap: 0;
 }
 
 /* =========================
-   PAGE BASE
+   PAGE
 ========================= */
 
 .page {
   height: 92vh;
-  width: auto;
-  max-width: 50vw;
-
+  max-width: 48vw;
   object-fit: contain;
   background: white;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-
-  backface-visibility: hidden;
-
-  /* 🔥 FIX BLUR / IMPROVE SHARPNESS */
-  image-rendering: auto;
-  transform: translateZ(0);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  user-select: none;
 }
-
-/* LEFT / RIGHT */
 
 .page.left {
   border-radius: 0 10px 10px 0;
@@ -97,59 +90,32 @@ body {
   border-radius: 10px 0 0 10px;
 }
 
-/* =========================
-   COVER FIX (IMPORTANT)
-========================= */
-
-.cover-single {
+/* cover single page */
+.cover {
   max-width: 70vw;
 }
 
 /* =========================
-   SIDE NAV BUTTONS (DESKTOP)
+   NAV
 ========================= */
 
 .nav {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  background: transparent;
+  font-size: 40px;
+  background: none;
   border: none;
-  font-size: 48px;
   color: var(--ui);
   cursor: pointer;
   z-index: 9999;
-  opacity: 0.6;
-  transition: opacity 0.2s;
+  opacity: 0.5;
 }
 
-.nav:hover {
-  opacity: 1;
-}
+.nav:hover { opacity: 1; }
 
-#prevBtn {
-  left: 24px;
-}
-
-#nextBtn {
-  right: 24px;
-}
-
-/* MOBILE NAV (bottom) */
-
-@media (max-width: 900px) {
-
-  #prevBtn, #nextBtn {
-    top: auto;
-    bottom: 18px;
-    transform: none;
-    font-size: 22px;
-    background: rgba(0,0,0,0.15);
-    padding: 10px 14px;
-    border-radius: 999px;
-  }
-
-}
+#prev { left: 20px; }
+#next { right: 20px; }
 
 /* =========================
    COUNTER
@@ -157,27 +123,17 @@ body {
 
 .counter {
   position: fixed;
-  top: 18px;
-  right: 18px;
+  top: 20px;
+  right: 20px;
   color: var(--ui);
-  font-size: 12px;
-  letter-spacing: 1px;
 }
 
 /* =========================
-   DRAG FEEL
+   ZOOM STATE
 ========================= */
 
-.dragging {
-  cursor: grabbing;
-}
-
-.page.drag-left {
-  transform: rotateY(-18deg);
-}
-
-.page.drag-right {
-  transform: rotateY(18deg);
+.zoomed {
+  cursor: grab;
 }
 
 </style>
@@ -189,44 +145,30 @@ body {
 
 <div class="counter" id="counter"></div>
 
-<button class="nav" id="prevBtn" onclick="prev()">‹</button>
-<button class="nav" id="nextBtn" onclick="next()">›</button>
+<button class="nav" id="prev" onclick="prev()">‹</button>
+<button class="nav" id="next" onclick="next()">›</button>
 
-<div class="viewer">
+<div class="viewer" id="viewer">
   <div class="book" id="book"></div>
 </div>
 
 <script>
 
 /* =========================
-   ISSUE CONFIG
+   FIXED IMAGE PATHS
 ========================= */
 
 const issuePath = "issues/issue-01/";
 
+/* IMPORTANT: safer string-based loading */
 const pages = Array.from({ length: 19 }, (_, i) =>
-  `${issuePath}page-${String(i+1).padStart(2,'0')}.jpg`
+  issuePath + "page-" + String(i+1).padStart(2,'0') + ".jpg"
 );
 
 let current = 0;
 
 /* =========================
-   PRELOAD CACHE
-========================= */
-
-const cache = new Map();
-
-function load(n) {
-  if (cache.has(n)) return cache.get(n);
-
-  const img = new Image();
-  img.src = pages[n];
-  cache.set(n, img);
-  return img;
-}
-
-/* =========================
-   RENDER (FIXED SPREAD LOGIC)
+   RENDER
 ========================= */
 
 function render() {
@@ -238,130 +180,127 @@ function render() {
 
   counter.innerText = `${current + 1} / ${pages.length}`;
 
-  /* =========================
-     COVER HANDLING (FIXED)
-  ========================= */
-
+  /* COVER ONLY */
   if (current === 0) {
 
-    const cover = load(0);
-    cover.className = "page cover-single";
-    book.appendChild(cover);
+    const img = document.createElement("img");
+    img.src = pages[0];
+    img.className = "page cover";
 
-    load(1);
-    load(2);
+    book.appendChild(img);
     return;
   }
 
-  /* =========================
-     SPREAD LOGIC (CORRECTED)
-  ========================= */
-
-  const leftIndex = current;
-  const rightIndex = current + 1;
-
-  const left = load(leftIndex);
+  /* SPREADS */
+  const left = document.createElement("img");
+  left.src = pages[current];
   left.className = "page left";
-
   book.appendChild(left);
 
+  const rightIndex = current + 1;
+
   if (rightIndex < pages.length) {
-    const right = load(rightIndex);
+    const right = document.createElement("img");
+    right.src = pages[rightIndex];
     right.className = "page right";
     book.appendChild(right);
   }
-
-  /* preload neighbors */
-  load(current + 2);
-  load(current - 2);
-
 }
 
 /* =========================
-   NAVIGATION (SPREAD SAFE)
+   NAVIGATION (FIXED COVER LOGIC)
 ========================= */
 
 function next() {
+
   if (current === 0) {
     current = 1;
   } else if (current < pages.length - 2) {
     current += 2;
   }
+
   render();
 }
 
 function prev() {
+
   if (current === 1) {
     current = 0;
   } else if (current > 1) {
     current -= 2;
   }
+
   render();
 }
 
 /* =========================
-   DRAG FLIP (APPLE BOOKS FEEL)
+   PINCH + ZOOM (WORKING VERSION)
+========================= */
+
+let scale = 1;
+let startDist = 0;
+
+/* wheel zoom (desktop) */
+window.addEventListener("wheel", e => {
+
+  scale += e.deltaY * -0.0015;
+  scale = Math.min(Math.max(1, scale), 3);
+
+  document.getElementById("viewer").style.transform =
+    `scale(${scale})`;
+
+});
+
+/* pinch zoom (mobile) */
+function getDist(touches) {
+  return Math.hypot(
+    touches[0].clientX - touches[1].clientX,
+    touches[0].clientY - touches[1].clientY
+  );
+}
+
+window.addEventListener("touchstart", e => {
+  if (e.touches.length === 2) {
+    startDist = getDist(e.touches);
+  }
+});
+
+window.addEventListener("touchmove", e => {
+
+  if (e.touches.length === 2) {
+
+    const newDist = getDist(e.touches);
+    const delta = newDist - startDist;
+
+    scale += delta * 0.005;
+    scale = Math.min(Math.max(1, scale), 3);
+
+    document.getElementById("viewer").style.transform =
+      `scale(${scale})`;
+
+    startDist = newDist;
+  }
+});
+
+/* =========================
+   SWIPE
 ========================= */
 
 let startX = 0;
-let dragging = false;
 
-document.addEventListener("mousedown", e => {
-  dragging = true;
-  startX = e.clientX;
-  document.body.classList.add("dragging");
+window.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
 });
 
-document.addEventListener("mouseup", () => {
-  dragging = false;
-  document.body.classList.remove("dragging");
+window.addEventListener("touchend", e => {
+
+  const dx = e.changedTouches[0].clientX - startX;
+
+  if (dx < -50) next();
+  if (dx > 50) prev();
 });
 
-document.addEventListener("mousemove", e => {
-
-  if (!dragging) return;
-
-  const dx = e.clientX - startX;
-  const pagesEl = document.querySelectorAll(".page");
-
-  pagesEl.forEach(p => {
-    p.style.transform = `rotateY(${dx * 0.05}deg)`;
-  });
-
-  if (dx < -80) {
-    next();
-    dragging = false;
-  }
-
-  if (dx > 80) {
-    prev();
-    dragging = false;
-  }
-
-});
-
-/* =========================
-   TOUCH SWIPE
-========================= */
-
-let tStart = 0;
-
-document.addEventListener("touchstart", e => {
-  tStart = e.touches[0].clientX;
-});
-
-document.addEventListener("touchend", e => {
-
-  const dx = e.changedTouches[0].clientX - tStart;
-
-  if (dx < -40) next();
-  if (dx > 40) prev();
-
-});
-
-/* =========================
-   INIT
-========================= */
+/* INIT */
 
 render();
 
