@@ -31,10 +31,9 @@
       text-transform: uppercase;
       font-family: 'Teko', sans-serif;
       line-height: 0.85;
-      display: block;
+      cursor: pointer;
       width: 100%;
       transition: transform 0.25s ease;
-      cursor: pointer;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -56,7 +55,6 @@
       font-family: 'IBM Plex Mono', monospace;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      line-height: 1.2;
     }
 
     /* =========================
@@ -71,7 +69,7 @@
     }
 
     /* =========================
-       ISSUE CARD
+       ISSUE CARD (FIXED RESPONSIVE)
     ========================== */
 
     .issue {
@@ -82,9 +80,9 @@
       color: inherit;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+      width: 100%;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -94,10 +92,11 @@
       }
     }
 
+    /* IMAGE ALWAYS FITS SCREEN */
     .cover {
       width: 100%;
-      display: block;
       height: auto;
+      display: block;
     }
 
     .content {
@@ -116,30 +115,37 @@
     .content p {
       margin: 0;
       color: #666;
+      font-size: 15px;
       line-height: 1.5;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 15px;
     }
 
     /* =========================
-       MOBILE
+       MOBILE FIX (FULL WIDTH + FIT)
     ========================== */
 
     @media (max-width: 600px) {
 
+      body {
+        padding: 24px 10px;
+      }
+
       h1 {
         font-size: 22vw;
-        letter-spacing: 2px;
       }
 
       .subtitle {
         font-size: 5vw;
         max-width: 92vw;
-        margin: 0 auto 40px auto;
+        margin-bottom: 30px;
       }
 
-      body {
-        padding: 24px 10px;
+      .grid {
+        max-width: 100%;
+      }
+
+      .issue {
+        border-radius: 12px;
       }
     }
 
@@ -148,7 +154,6 @@
 
 <body>
 
-  <!-- CLICKABLE TITLE -->
   <h1 id="title">FLOCK</h1>
 
   <p class="subtitle">
@@ -157,7 +162,6 @@
 
   <div class="grid">
 
-    <!-- LATEST ISSUE -->
     <a class="issue" id="latest-issue" href="issues/issue-01/">
 
       <img
@@ -168,7 +172,8 @@
 
       <div class="content">
 
-        <h2>Issue 01</h2>
+        <!-- SCROLL TARGET (IMPORTANT CHANGE) -->
+        <h2 id="issue-header">Issue 01</h2>
 
         <p>
           A Guide to Birdwatching in the UK
@@ -180,10 +185,9 @@
 
   </div>
 
-  <!-- SCROLL SCRIPT -->
   <script>
     document.getElementById("title").addEventListener("click", () => {
-      const el = document.getElementById("latest-issue");
+      const el = document.getElementById("issue-header");
 
       if (el) {
         el.scrollIntoView({
