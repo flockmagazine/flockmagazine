@@ -1,103 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>FLOCK</title>
+  <title>FLOCK</title>
 
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
+  <style>
 
-body {
-  margin: 0;
-  padding: 40px 20px;
-  background: #f4f1ea;
-}
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f1ea;
+      margin: 0;
+      padding: 40px 20px;
+      color: #222;
+    }
 
-h1 {
-  text-align: center;
-  font-family: "Teko", sans-serif;
-  font-size: 200px;
-  margin: 0;
-  line-height: 0.9;
-}
+    /* =========================
+       TITLE
+    ========================== */
 
-/* MOBILE TITLE FIX (BIGGER) */
-@media (max-width: 600px) {
+    h1 {
+      text-align: center;
+      margin: 0 auto 10px auto;
+      font-size: 240px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: 'Teko', sans-serif;
+      line-height: 0.85;
+      display: block;
+      width: 100%;
+      transition: transform 0.25s ease;
+    }
 
-  h1 {
-    font-size: 36vw; /* 🔥 much larger, edge-to-edge feel */
-    letter-spacing: 1px;
-  }
+    /* desktop hover only */
+    @media (hover: hover) and (pointer: fine) {
+      h1:hover {
+        transform: scale(1.04);
+      }
+    }
 
-  .subtitle {
-    font-size: 20px;
-  }
+    /* =========================
+       SUBTITLE
+    ========================== */
 
-}
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin: 0 auto 50px auto;
+      font-size: 28px;
+      width: 100%;
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      line-height: 1.2;
+    }
 
-.subtitle {
-  text-align: center;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 28px;
-  margin: 10px auto 50px;
-  color: #666;
-}
+    /* =========================
+       GRID
+    ========================== */
 
-.grid {
-  display: flex;
-  justify-content: center;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      max-width: 400px;
+      margin: auto;
+    }
 
-.issue {
-  width: min(380px, 92vw);
-  background: white;
-  border-radius: 14px;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
+    /* =========================
+       ISSUE CARD
+    ========================== */
 
-.cover { width: 100%; display: block; }
+    .issue {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 
-.content {
-  padding: 18px;
-  font-family: "IBM Plex Mono", monospace;
-}
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
 
-.content h2 {
-  margin: 0 0 6px;
-  font-size: 16px;
-}
+    /* desktop hover only */
+    @media (hover: hover) and (pointer: fine) {
 
-.content p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-}
+      .issue:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      }
 
-</style>
+    }
+
+    .cover {
+      width: 100%;
+      display: block;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 600;
+    }
+
+    .content p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 600px) {
+
+      h1 {
+        font-size: 42vw;
+        letter-spacing: 2px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        padding: 0 10px;
+      }
+
+    }
+
+  </style>
 </head>
 
 <body>
 
-<h1>FLOCK</h1>
-<p class="subtitle">THE BIRDWATCHING MAGAZINE</p>
+  <h1>FLOCK</h1>
 
-<div class="grid">
+  <p class="subtitle">
+    THE BIRDWATCHING MAGAZINE
+  </p>
 
-  <a class="issue" href="issues/issue-01/">
-    <img class="cover" src="issues/issue-01/page-01.jpg">
-    <div class="content">
-      <h2>ISSUE 01</h2>
-      <p>A Guide to Birdwatching in the UK</p>
-    </div>
-  </a>
+  <div class="grid">
 
-</div>
+    <a class="issue" href="issues/issue-01/">
+
+      <img
+        class="cover"
+        src="flock-issue-01-may-2026-cover-page.jpg"
+        alt="FLOCK Issue 01 Cover"
+      >
+
+      <div class="content">
+
+        <h2>Issue 01</h2>
+
+        <p>
+          A Guide to Birdwatching in the UK
+        </p>
+
+      </div>
+
+    </a>
+
+  </div>
 
 </body>
 </html>
