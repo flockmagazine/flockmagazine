@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>FLOCK</title>
@@ -14,33 +14,30 @@ body {
   margin: 0;
   padding: 40px 20px;
   background: #f4f1ea;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
 }
 
-/* TITLE (DESKTOP BIGGER) */
+/* TITLE */
 h1 {
   text-align: center;
   font-family: "Teko", sans-serif;
-  font-size: 200px; /* +25% bigger */
+  font-size: 200px;
   margin: 0;
   line-height: 0.9;
-  letter-spacing: 3px;
 }
 
-/* MOBILE ADJUST */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 140px;
-  }
-}
-
+/* SUBTITLE (FIXED — BIG AGAIN) */
 .subtitle {
   text-align: center;
   font-family: "IBM Plex Mono", monospace;
-  margin-bottom: 50px;
+  font-size: 28px;   /* FIX */
+  margin: 10px auto 50px;
+  max-width: 100%;
+  letter-spacing: 2px;
   color: #666;
 }
 
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -49,6 +46,7 @@ h1 {
   gap: 20px;
 }
 
+/* ISSUE CARD */
 .issue {
   background: white;
   border-radius: 14px;
@@ -56,21 +54,29 @@ h1 {
   text-decoration: none;
   color: inherit;
   box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-  transition: transform 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .issue:hover {
   transform: translateY(-6px) scale(1.04);
 }
 
+/* COVER */
 .cover {
   width: 100%;
   display: block;
 }
 
+/* TEXT */
 .content {
   padding: 18px;
   font-family: "IBM Plex Mono", monospace;
+}
+
+.content h2 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 2px;
 }
 
 </style>
@@ -82,12 +88,17 @@ h1 {
 <p class="subtitle">THE BIRDWATCHING MAGAZINE</p>
 
 <div class="grid">
+
   <a class="issue" href="issues/issue-01/">
+
     <img class="cover" src="issues/issue-01/page-01.jpg">
+
     <div class="content">
-      ISSUE 01
+      <h2>ISSUE 01</h2> <!-- FIXED (restored label) -->
     </div>
+
   </a>
+
 </div>
 
 </body>
