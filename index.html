@@ -19,7 +19,7 @@
     }
 
     /* =========================
-       TITLE
+       TITLE (DESKTOP FIXED)
     ========================== */
 
     h1 {
@@ -36,7 +36,6 @@
       transition: transform 0.25s ease;
     }
 
-    /* desktop hover only */
     @media (hover: hover) and (pointer: fine) {
       h1:hover {
         transform: scale(1.04);
@@ -44,7 +43,7 @@
     }
 
     /* =========================
-       SUBTITLE
+       SUBTITLE (RESTORED SIZE)
     ========================== */
 
     .subtitle {
@@ -60,19 +59,15 @@
     }
 
     /* =========================
-       GRID
+       GRID (FIXED COVER VISIBILITY)
     ========================== */
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      max-width: 400px;
+      grid-template-columns: 1fr;
+      max-width: 420px;
       margin: auto;
     }
-
-    /* =========================
-       ISSUE CARD
-    ========================== */
 
     .issue {
       background: white;
@@ -82,24 +77,20 @@
       color: inherit;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    /* desktop hover only */
     @media (hover: hover) and (pointer: fine) {
-
       .issue:hover {
         transform: translateY(-6px) scale(1.03);
         box-shadow: 0 16px 40px rgba(0,0,0,0.18);
       }
-
     }
 
     .cover {
       width: 100%;
       display: block;
+      height: auto;
     }
 
     .content {
@@ -124,21 +115,26 @@
     }
 
     /* =========================
-       MOBILE
+       MOBILE FIX (CENTER + SCALE)
     ========================== */
 
     @media (max-width: 600px) {
 
       h1 {
-        font-size: 42vw;
+        font-size: 20vw; /* responsive, prevents overflow */
         letter-spacing: 2px;
       }
 
       .subtitle {
-        font-size: 18px;
-        padding: 0 10px;
+        font-size: 5vw;
+        max-width: 90vw;
+        margin-left: auto;
+        margin-right: auto;
       }
 
+      body {
+        padding: 30px 14px;
+      }
     }
 
   </style>
