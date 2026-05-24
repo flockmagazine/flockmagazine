@@ -21,47 +21,42 @@ body {
 h1 {
   text-align: center;
   font-family: "Teko", sans-serif;
-  font-size: 200px;
+  font-size: clamp(90px, 10vw, 200px);
   margin: 0;
-  line-height: 0.9;
 }
 
-/* SUBTITLE (FIXED — BIG AGAIN) */
+/* SUBTITLE (RESTORED SIZE) */
 .subtitle {
   text-align: center;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 28px;   /* FIX */
+  font-size: clamp(16px, 2vw, 28px);
   margin: 10px auto 50px;
-  max-width: 100%;
-  letter-spacing: 2px;
   color: #666;
+  max-width: 90%;
 }
 
-/* GRID */
+/* GRID CENTER FIX */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  max-width: 420px;
-  margin: auto;
-  gap: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 /* ISSUE CARD */
 .issue {
+  width: min(360px, 90vw);
   background: white;
   border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-  transition: 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .issue:hover {
-  transform: translateY(-6px) scale(1.04);
+  transform: translateY(-6px) scale(1.03);
 }
 
-/* COVER */
 .cover {
   width: 100%;
   display: block;
@@ -74,9 +69,15 @@ h1 {
 }
 
 .content h2 {
-  margin: 0;
+  margin: 0 0 8px;
   font-size: 16px;
   letter-spacing: 2px;
+}
+
+.content p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
 }
 
 </style>
@@ -94,7 +95,8 @@ h1 {
     <img class="cover" src="issues/issue-01/page-01.jpg">
 
     <div class="content">
-      <h2>ISSUE 01</h2> <!-- FIXED (restored label) -->
+      <h2>ISSUE 01</h2>
+      <p>A Guide to Birdwatching in the UK</p>
     </div>
 
   </a>
