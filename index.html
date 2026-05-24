@@ -10,10 +10,6 @@
 
 <style>
 
-/* =========================
-   BASE
-========================= */
-
 body {
   margin: 0;
   padding: 40px 20px;
@@ -21,22 +17,13 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* =========================
-   TITLE (DESKTOP UNCHANGED LOOK)
-========================= */
-
 h1 {
   text-align: center;
   font-family: "Teko", sans-serif;
   font-size: 200px;
   margin: 0;
   line-height: 0.9;
-  letter-spacing: 2px;
 }
-
-/* =========================
-   SUBTITLE (FIXED SIZE + RESPONSIVE)
-========================= */
 
 .subtitle {
   text-align: center;
@@ -44,34 +31,27 @@ h1 {
   font-size: 28px;
   margin: 10px auto 50px;
   color: #666;
-  max-width: 95%;
-  letter-spacing: 1.5px;
 }
 
-/* MOBILE SCALE UP (so it doesn't feel too small) */
+/* MOBILE ONLY */
 @media (max-width: 600px) {
+
   h1 {
-    font-size: 20vw; /* fills screen width properly */
+    font-size: 30vw;
+    letter-spacing: 1px;
   }
 
   .subtitle {
     font-size: 22px;
     padding: 0 10px;
   }
-}
 
-/* =========================
-   GRID
-========================= */
+}
 
 .grid {
   display: flex;
   justify-content: center;
 }
-
-/* =========================
-   ISSUE CARD
-========================= */
 
 .issue {
   width: min(380px, 92vw);
@@ -81,21 +61,18 @@ h1 {
   text-decoration: none;
   color: inherit;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .issue:hover {
   transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
 }
 
-/* COVER IMAGE */
 .cover {
   width: 100%;
   display: block;
 }
 
-/* TEXT AREA */
 .content {
   padding: 18px;
   font-family: "IBM Plex Mono", monospace;
@@ -111,7 +88,6 @@ h1 {
   margin: 0;
   font-size: 14px;
   color: #666;
-  line-height: 1.4;
 }
 
 </style>
@@ -119,27 +95,15 @@ h1 {
 
 <body>
 
-<!-- =========================
-     TITLE
-========================= -->
 <h1>FLOCK</h1>
-
-<!-- =========================
-     SUBTITLE (RESTORED FULL WIDTH FEEL)
-========================= -->
 <p class="subtitle">THE BIRDWATCHING MAGAZINE</p>
 
-<!-- =========================
-     ISSUE GRID
-========================= -->
 <div class="grid">
 
   <a class="issue" href="issues/issue-01/">
 
-    <!-- COVER -->
-    <img class="cover" src="issues/issue-01/page-01.jpg" alt="Issue 01 Cover">
+    <img class="cover" src="issues/issue-01/page-01.jpg">
 
-    <!-- TEXT -->
     <div class="content">
       <h2>ISSUE 01</h2>
       <p>A Guide to Birdwatching in the UK</p>
