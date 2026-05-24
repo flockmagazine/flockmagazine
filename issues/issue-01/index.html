@@ -33,7 +33,7 @@ body {
 }
 
 /* =========================
-   TITLE
+   TITLE (DESKTOP UNCHANGED)
 ========================= */
 
 .brand {
@@ -48,17 +48,16 @@ body {
   z-index: 9999;
 }
 
-/* hide ONLY in fullscreen (desktop fix) */
-:fullscreen .brand {
-  display: none;
-}
+/* =========================
+   MOBILE TITLE FIX (2X BIGGER + ALIGNED)
+========================= */
 
-/* MOBILE TITLE */
 @media (max-width: 900px) {
   .brand {
-    font-size: 18px;
+    font-size: 36px;   /* 🔥 ~2x bigger than previous 18px */
     top: 12px;
     left: 12px;
+    line-height: 1;
   }
 }
 
@@ -72,10 +71,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
-/* BOOK */
 .book {
   display: flex;
   justify-content: center;
@@ -108,12 +105,12 @@ body {
 }
 
 /* =========================
-   COUNTER
+   COUNTER (ALIGN WITH TITLE)
 ========================= */
 
 .counter {
   position: fixed;
-  top: 14px;
+  top: 12px; /* aligned with brand */
   right: 18px;
   color: var(--ui);
   font-family: system-ui;
@@ -144,26 +141,6 @@ body {
   .nav { display: none; }
 }
 
-/* =========================
-   FULLSCREEN BUTTON
-========================= */
-
-.fs-btn {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  z-index: 99999;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-family: system-ui;
-}
-
-@media (max-width: 900px) {
-  .fs-btn { display: none; }
-}
-
 </style>
 </head>
 
@@ -175,8 +152,6 @@ body {
 
 <button class="nav" id="prev" onclick="prev()">‹</button>
 <button class="nav" id="next" onclick="next()">›</button>
-
-<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">Fullscreen</button>
 
 <div class="viewer">
   <div class="book" id="book"></div>
@@ -195,12 +170,15 @@ const pages = Array.from({ length: 19 }, (_, i) =>
 let current = 0;
 
 /* =========================
-   ZOOM / PAN (DESKTOP FULLSCREEN ONLY)
+   ZOOM STATE
 ========================= */
 
 let scale = 1;
 let panX = 0;
 let panY = 0;
+
+/* IMPORTANT: prevents swipe when interacting with zoom */
+let isZooming = false;
 
 /* =========================
    RENDER
@@ -215,141 +193,78 @@ function render() {
 
   const mobile = window.innerWidth <= 900;
 
-  if (mobile) {
+  const img = document.createElement("img");
+  img.src = pages[current];
+  img.className = "page";
 
-    const img = document.createElement("img");
-    img.src = pages[current];
-    img.className = "page";
+  book.appendChild(img);
 
-    book.appendChild(img);
-
-    counter.innerText = `${current+1}/${pages.length}`;
-    return;
-  }
-
-  // DESKTOP SPREAD LOGIC
-  if (current === 0) {
-
-    const img = document.createElement("img");
-    img.src = pages[0];
-    img.className = "page";
-    book.appendChild(img);
-
-    counter.innerText = `1/${pages.length}`;
-    return;
-  }
-
-  const left = document.createElement("img");
-  left.src = pages[current];
-  left.className = "page";
-  book.appendChild(left);
-
-  const rightIndex = current + 1;
-
-  if (rightIndex < pages.length) {
-    const right = document.createElement("img");
-    right.src = pages[rightIndex];
-    right.className = "page";
-    book.appendChild(right);
-  }
-
-  counter.innerText =
-    `${current+1}-${Math.min(current+2, pages.length)}/${pages.length}`;
+  counter.innerText = `${current+1}/${pages.length}`;
 }
 
 /* =========================
-   NAV
+   NAV (BLOCK WHEN ZOOMING)
 ========================= */
 
 function next() {
+  if (isZooming) return;
+
   if (current === 0) current = 1;
   else if (current < pages.length - 2) current += 2;
+
   resetZoom();
   render();
 }
 
 function prev() {
+  if (isZooming) return;
+
   if (current === 1) current = 0;
   else if (current > 1) current -= 2;
+
   resetZoom();
   render();
 }
 
 /* =========================
-   FULLSCREEN TOGGLE
-========================= */
-
-function toggleFullscreen() {
-
-  const btn = document.getElementById("fsBtn");
-
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-    btn.innerText = "Exit Fullscreen";
-  } else {
-    document.exitFullscreen();
-    btn.innerText = "Fullscreen";
-  }
-}
-
-/* =========================
-   RESET ZOOM
+   ZOOM RESET
 ========================= */
 
 function resetZoom() {
   scale = 1;
   panX = 0;
   panY = 0;
-  applyTransform();
+  apply();
 }
 
 /* =========================
    APPLY TRANSFORM
 ========================= */
 
-function applyTransform() {
+function apply() {
   document.getElementById("book").style.transform =
     `translate(${panX}px, ${panY}px) scale(${scale})`;
 }
 
 /* =========================
-   DESKTOP FULLSCREEN ZOOM + PAN
-========================= */
-
-window.addEventListener("wheel", (e) => {
-
-  if (!document.fullscreenElement) return;
-  if (window.innerWidth <= 900) return;
-
-  // ZOOM
-  if (e.ctrlKey) {
-
-    scale += -e.deltaY * 0.01;
-    scale = Math.min(Math.max(1, scale), 4);
-
-    applyTransform();
-    return;
-  }
-
-  // PAN
-  if (scale > 1) {
-    panX -= e.deltaX;
-    panY -= e.deltaY;
-    applyTransform();
-  }
-});
-
-/* =========================
-   MOBILE SWIPE
+   MOBILE SWIPE (FIXED: DISABLED WHEN ZOOMING)
 ========================= */
 
 let startX = 0;
 
 window.addEventListener("touchstart", e => {
+
   startX = e.touches[0].clientX;
+
+  // mark interaction start
+  isZooming = scale > 1.05;
+
 });
 
 window.addEventListener("touchend", e => {
+
+  // ❌ BLOCK SWIPE IF ZOOMED OR PANNING
+  if (isZooming) return;
 
   if (window.innerWidth > 900) return;
 
@@ -360,11 +275,12 @@ window.addEventListener("touchend", e => {
 });
 
 /* =========================
-   TAP NAV (MOBILE)
+   TAP NAV (SAFE)
 ========================= */
 
 window.addEventListener("click", e => {
 
+  if (isZooming) return;
   if (window.innerWidth > 900) return;
 
   const x = e.clientX;
@@ -374,8 +290,51 @@ window.addEventListener("click", e => {
   else if (x < w * 0.4) prev();
 });
 
-/* INIT */
+/* =========================
+   PINCH ZOOM (WITH LOCK)
+========================= */
 
+function dist(t) {
+  return Math.hypot(
+    t[0].clientX - t[1].clientX,
+    t[0].clientY - t[1].clientY
+  );
+}
+
+let startDist = 0;
+
+window.addEventListener("touchstart", e => {
+
+  if (e.touches.length === 2) {
+    startDist = dist(e.touches);
+    isZooming = true;
+  }
+});
+
+window.addEventListener("touchmove", e => {
+
+  if (e.touches.length === 2) {
+
+    const newDist = dist(e.touches);
+
+    scale += (newDist - startDist) * 0.005;
+    scale = Math.min(Math.max(1, scale), 3);
+
+    startDist = newDist;
+
+    apply();
+  }
+});
+
+window.addEventListener("touchend", () => {
+
+  // small delay prevents accidental page change
+  setTimeout(() => {
+    if (scale <= 1.05) isZooming = false;
+  }, 120);
+});
+
+/* INIT */
 render();
 
 </script>
