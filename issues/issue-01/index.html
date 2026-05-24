@@ -10,10 +10,6 @@
 
 <style>
 
-/* =========================
-   THEME
-========================= */
-
 :root {
   --bg: #111;
   --ui: #fff;
@@ -33,28 +29,34 @@ body {
 }
 
 /* =========================
-   FULLSCREEN BUTTONS
+   TITLE
 ========================= */
 
-.fs-btn {
+.brand {
   position: fixed;
-  bottom: 18px;
-  right: 18px;
-  z-index: 99999;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: none;
+  top: 10px;
+  left: 18px;
+  font-family: "Teko", sans-serif;
+  font-weight: 700;
+  font-size: 56px;
+  color: var(--ui);
   cursor: pointer;
-  font-family: system-ui;
+  z-index: 9999;
 }
 
-#exitFs {
-  display: none;
-  right: 90px;
+@media (max-width: 900px) {
+  .brand {
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 34vw;
+    text-align: center;
+    width: 100%;
+    top: 6px;
+  }
 }
 
 /* =========================
-   DESKTOP VIEWER FIX (NO OVERFLOW)
+   VIEWER
 ========================= */
 
 .viewer {
@@ -63,20 +65,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  overflow: hidden;
 }
 
-/* BOOK */
 .book {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
-
-/* =========================
-   PAGE
-========================= */
 
 .page {
   max-height: 92vh;
@@ -84,29 +80,13 @@ body {
   object-fit: contain;
   border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  touch-action: none;
 }
 
-/* =========================
-   MOBILE LAYOUT = HEADER + VIEWPORT
-========================= */
-
+/* MOBILE = SINGLE PAGE ONLY */
 @media (max-width: 900px) {
 
-  body {
-    overflow: hidden;
-  }
-
-  .viewer {
-    flex-direction: column;
-  }
-
   .book {
-    height: calc(100vh - 70px);
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
   }
 
   .page {
@@ -117,54 +97,16 @@ body {
 }
 
 /* =========================
-   MOBILE HEADER (NO OVERLAP SYSTEM)
-========================= */
-
-.mobile-bar {
-  display: none;
-}
-
-@media (max-width: 900px) {
-
-  .mobile-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-    padding: 12px 14px;
-    z-index: 9999;
-
-    font-family: "Teko", sans-serif;
-    color: var(--ui);
-  }
-
-  .mobile-title {
-    font-size: 26px;
-    font-weight: 700;
-  }
-
-  .counter {
-    font-family: system-ui;
-    font-size: 14px;
-  }
-}
-
-/* =========================
-   DESKTOP COUNTER
+   COUNTER
 ========================= */
 
 .counter {
   position: fixed;
   top: 18px;
   right: 18px;
-  z-index: 9999;
   color: var(--ui);
   font-family: system-ui;
+  z-index: 9999;
 }
 
 /* =========================
@@ -187,16 +129,33 @@ body {
 #prev { left: 20px; }
 #next { right: 20px; }
 
-@media (max-width: 900px) {
-  .nav { display: none; }
-}
-
 /* =========================
-   ZOOM/PAN FIX
+   FULLSCREEN BUTTONS (DESKTOP ONLY)
 ========================= */
 
-.zoomed {
-  cursor: grab;
+.fs-btn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 99999;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-family: system-ui;
+}
+
+#exitFs {
+  display: none;
+  right: 130px;
+}
+
+/* 🚫 REMOVE ON MOBILE */
+@media (max-width: 900px) {
+  .fs-btn {
+    display: none;
+  }
+  .nav { display: none; }
 }
 
 </style>
@@ -204,25 +163,18 @@ body {
 
 <body>
 
-<!-- MOBILE TOP BAR -->
-<div class="mobile-bar">
-  <div class="mobile-title">FLOCK</div>
-  <div id="mobileCounter"></div>
-</div>
+<div class="brand" onclick="location.href='../../index.html'">FLOCK</div>
 
-<!-- DESKTOP COUNTER -->
 <div class="counter" id="counter"></div>
 
-<!-- FULLSCREEN BUTTONS -->
-<button class="fs-btn" onclick="goFullscreen()">Fullscreen</button>
-<button class="fs-btn" id="exitFs" onclick="exitFullscreen()">Exit</button>
-
-<!-- NAV -->
 <button class="nav" id="prev" onclick="prev()">‹</button>
 <button class="nav" id="next" onclick="next()">›</button>
 
-<!-- VIEWER -->
-<div class="viewer" id="viewer">
+<!-- DESKTOP ONLY BUTTONS -->
+<button class="fs-btn" onclick="goFullscreen()">Fullscreen</button>
+<button class="fs-btn" id="exitFs" onclick="exitFullscreen()">Exit</button>
+
+<div class="viewer">
   <div class="book" id="book"></div>
 </div>
 
@@ -239,44 +191,46 @@ const pages = Array.from({ length: 19 }, (_, i) =>
 let current = 0;
 
 /* =========================
-   ZOOM + PAN STATE
-========================= */
-
-let scale = 1;
-let panX = 0;
-let panY = 0;
-
-let startDist = 0;
-let startPanX = 0;
-let startPanY = 0;
-let isPanning = false;
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const viewer = document.getElementById("viewer");
-const book = document.getElementById("book");
-
-/* =========================
-   RENDER
+   RENDER (FIXED SPREAD LOGIC)
 ========================= */
 
 function render() {
 
+  const book = document.getElementById("book");
+  const counter = document.getElementById("counter");
+
   book.innerHTML = "";
 
-  const img = document.createElement("img");
-  img.src = pages[current];
-  img.className = "page";
+  const mobile = window.innerWidth <= 900;
 
-  book.appendChild(img);
+  if (mobile) {
 
-  document.getElementById("counter").innerText =
-    `${current+1}/${pages.length}`;
+    const img = document.createElement("img");
+    img.src = pages[current];
+    img.className = "page";
+    book.appendChild(img);
 
-  document.getElementById("mobileCounter").innerText =
-    `${current+1}/${pages.length}`;
+    counter.innerText = `${current+1}/${pages.length}`;
+    return;
+  }
+
+  // DESKTOP SPREADS
+  const left = document.createElement("img");
+  left.src = pages[current];
+  left.className = "page";
+  book.appendChild(left);
+
+  const rightIndex = current + 1;
+
+  if (rightIndex < pages.length) {
+    const right = document.createElement("img");
+    right.src = pages[rightIndex];
+    right.className = "page";
+    book.appendChild(right);
+  }
+
+  counter.innerText =
+    `${current+1}-${Math.min(current+2, pages.length)}/${pages.length}`;
 }
 
 /* =========================
@@ -284,134 +238,27 @@ function render() {
 ========================= */
 
 function next() {
-  if (scale > 1.05) return;
-  if (current < pages.length - 1) current++;
+  if (current < pages.length - 2) current += 2;
   render();
 }
 
 function prev() {
-  if (scale > 1.05) return;
-  if (current > 0) current--;
+  if (current > 0) current -= 2;
   render();
 }
 
 /* =========================
-   FULLSCREEN
+   FULLSCREEN (DESKTOP ONLY)
 ========================= */
 
 function goFullscreen() {
-  const el = document.documentElement;
-
-  if (el.requestFullscreen) el.requestFullscreen();
-
+  document.documentElement.requestFullscreen();
   document.getElementById("exitFs").style.display = "block";
 }
 
 function exitFullscreen() {
-  if (document.exitFullscreen) document.exitFullscreen();
-
+  document.exitFullscreen();
   document.getElementById("exitFs").style.display = "none";
-}
-
-/* =========================
-   DOUBLE TAP RESET (iOS FEEL)
-========================= */
-
-let lastTap = 0;
-
-window.addEventListener("touchend", e => {
-
-  const now = Date.now();
-
-  if (now - lastTap < 300) {
-
-    scale = 1;
-    panX = 0;
-    panY = 0;
-    viewer.style.transform = "none";
-  }
-
-  lastTap = now;
-});
-
-/* =========================
-   PINCH + PAN
-========================= */
-
-function dist(t) {
-  return Math.hypot(
-    t[0].clientX - t[1].clientX,
-    t[0].clientY - t[1].clientY
-  );
-}
-
-window.addEventListener("touchstart", e => {
-
-  if (e.touches.length === 2) {
-    startDist = dist(e.touches);
-  }
-
-  if (e.touches.length === 1 && scale > 1.05) {
-    isPanning = true;
-    startPanX = e.touches[0].clientX - panX;
-    startPanY = e.touches[0].clientY - panY;
-  }
-});
-
-window.addEventListener("touchmove", e => {
-
-  if (e.touches.length === 2) {
-
-    const newDist = dist(e.touches);
-
-    scale += (newDist - startDist) * 0.005;
-    scale = Math.min(Math.max(1, scale), 3);
-
-    startDist = newDist;
-
-    apply();
-    return;
-  }
-
-  if (isPanning && e.touches.length === 1 && scale > 1.05) {
-
-    panX = e.touches[0].clientX - startPanX;
-    panY = e.touches[0].clientY - startPanY;
-
-    apply();
-  }
-});
-
-window.addEventListener("touchend", () => {
-  isPanning = false;
-});
-
-/* =========================
-   DESKTOP SCROLL ZOOM + PAN FIX
-========================= */
-
-window.addEventListener("wheel", e => {
-
-  if (e.ctrlKey) { // pinch zoom trackpad
-
-    scale += -e.deltaY * 0.01;
-    scale = Math.min(Math.max(1, scale), 4);
-
-    apply();
-  } else {
-
-    viewer.scrollTop += e.deltaY;
-    viewer.scrollLeft += e.deltaX;
-  }
-});
-
-/* =========================
-   APPLY TRANSFORM
-========================= */
-
-function apply() {
-  viewer.style.transform =
-    `translate(${panX}px, ${panY}px) scale(${scale})`;
 }
 
 /* INIT */
