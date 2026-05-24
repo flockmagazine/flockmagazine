@@ -29,32 +29,32 @@ body {
 }
 
 /* =========================
-   FLOCK (FIXED FONT + BOLD + SIZE RULES)
+   TOP BRAND (FIXED MOBILE CENTER)
 ========================= */
 
 .brand {
   position: fixed;
-  top: 12px;
+  top: 10px;
   left: 18px;
   font-family: "Teko", sans-serif;
-  font-weight: 700; /* FIX: bold restored */
-  font-size: 56px;  /* desktop base */
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 56px);
   color: var(--ui);
   cursor: pointer;
   z-index: 9999;
 }
 
-/* MOBILE: 3x bigger */
 @media (max-width: 900px) {
   .brand {
     left: 50%;
     transform: translateX(-50%);
-    font-size: 150px; /* ~3x bigger */
+    text-align: center;
+    font-size: clamp(70px, 12vw, 110px);
   }
 }
 
 /* =========================
-   VIEWER
+   VIEWER (FIXES WHITE BARS)
 ========================= */
 
 .viewer {
@@ -63,35 +63,64 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  touch-action: none; /* IMPORTANT for iOS zoom */
 }
 
-/* BOOK */
+/* IMPORTANT FIX: removes vertical gaps */
 .book {
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-/* PAGE */
+/* =========================
+   PAGE (FIX WHITE BARS COMPLETELY)
+========================= */
+
 .page {
+  display: block;
   height: 92vh;
+  width: auto;
   max-width: 48vw;
+
   object-fit: contain;
-  background: white;
-  border-radius: 14px;
+  background: transparent;
+
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border-radius: 14px;
 }
 
-/* MOBILE PAGE */
+/* MOBILE: FULL CONTROLLED CENTERING */
 @media (max-width: 900px) {
+
+  .book {
+    flex-direction: column;
+    height: 100vh;
+  }
+
   .page {
     max-width: 100vw;
+    height: auto;
+    max-height: 80vh; /* IMPORTANT: prevents overlap with title */
+    margin-top: 70px;  /* pushes image below title */
     border-radius: 0;
   }
 }
 
 /* =========================
-   NAV
+   COUNTER
+========================= */
+
+.counter {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  color: var(--ui);
+  font-family: system-ui;
+}
+
+/* =========================
+   NAV (DESKTOP ONLY)
 ========================= */
 
 .nav {
@@ -99,37 +128,18 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-size: 40px;
-  color: var(--ui);
   background: none;
   border: none;
+  color: var(--ui);
   cursor: pointer;
   opacity: 0.6;
-  z-index: 9999;
 }
 
 #prev { left: 20px; }
 #next { right: 20px; }
 
-/* HIDE NAV ON MOBILE */
 @media (max-width: 900px) {
   .nav { display: none; }
-}
-
-/* COUNTER */
-.counter {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  color: var(--ui);
-  font-family: system-ui;
-}
-
-/* =========================
-   ZOOM STATE (iOS STYLE)
-========================= */
-
-.zoomed {
-  cursor: grab;
 }
 
 </style>
@@ -144,14 +154,14 @@ body {
 <button class="nav" id="prev" onclick="prev()">‹</button>
 <button class="nav" id="next" onclick="next()">›</button>
 
-<div class="viewer" id="viewer">
+<div class="viewer">
   <div class="book" id="book"></div>
 </div>
 
 <script>
 
 /* =========================
-   PAGES
+   PAGES (SAFE PATHS)
 ========================= */
 
 const pages = Array.from({ length: 19 }, (_, i) =>
@@ -161,7 +171,7 @@ const pages = Array.from({ length: 19 }, (_, i) =>
 let current = 0;
 
 /* =========================
-   RENDER (UNCHANGED LOGIC)
+   RENDER (CLEAN + STABLE)
 ========================= */
 
 function render() {
@@ -172,6 +182,10 @@ function render() {
   book.innerHTML = "";
 
   const mobile = window.innerWidth <= 900;
+
+  /* =========================
+     MOBILE: SINGLE PAGE ONLY
+  ========================= */
 
   if (mobile) {
 
@@ -184,6 +198,10 @@ function render() {
     counter.innerText = `${current+1}/${pages.length}`;
     return;
   }
+
+  /* =========================
+     DESKTOP: SPREADS
+  ========================= */
 
   if (current === 0) {
 
@@ -234,67 +252,6 @@ function prev() {
   else if (current > 1) current -= 2;
   render();
 }
-
-/* =========================
-   iOS STYLE PINCH ZOOM (PROPER)
-========================= */
-
-let scale = 1;
-let startDist = 0;
-let isZoomed = false;
-
-const viewer = document.getElementById("viewer");
-
-function dist(t) {
-  return Math.hypot(
-    t[0].clientX - t[1].clientX,
-    t[0].clientY - t[1].clientY
-  );
-}
-
-/* pinch start */
-window.addEventListener("touchstart", e => {
-  if (e.touches.length === 2) {
-    startDist = dist(e.touches);
-    isZoomed = true;
-  }
-});
-
-/* pinch move */
-window.addEventListener("touchmove", e => {
-
-  if (e.touches.length === 2) {
-
-    const newDist = dist(e.touches);
-
-    scale += (newDist - startDist) * 0.005;
-    scale = Math.min(Math.max(1, scale), 3);
-
-    viewer.style.transform = `scale(${scale})`;
-
-    startDist = newDist;
-  }
-});
-
-/* =========================
-   SWIPE (DISABLED WHEN ZOOMED)
-========================= */
-
-let startX = 0;
-
-window.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-window.addEventListener("touchend", e => {
-
-  if (scale > 1.1) return; // 🔥 IMPORTANT FIX
-
-  const dx = e.changedTouches[0].clientX - startX;
-
-  if (dx < -50) next();
-  if (dx > 50) prev();
-});
 
 /* INIT */
 
