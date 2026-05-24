@@ -19,7 +19,7 @@
     }
 
     /* =========================
-       TITLE (DESKTOP — UNCHANGED)
+       TITLE (DESKTOP UNCHANGED)
     ========================== */
 
     h1 {
@@ -34,6 +34,7 @@
       width: 100%;
       cursor: pointer;
       transition: transform 0.25s ease;
+      white-space: nowrap;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -69,10 +70,6 @@
       margin: auto;
     }
 
-    /* =========================
-       ISSUE CARD
-    ========================== */
-
     .issue {
       background: white;
       border-radius: 14px;
@@ -80,9 +77,7 @@
       text-decoration: none;
       color: inherit;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      width: 100%;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -120,23 +115,13 @@
     }
 
     /* =========================
-       MOBILE — TRUE EDGE HUG TITLE
+       MOBILE LAYOUT (UNCHANGED)
     ========================== */
 
     @media (max-width: 600px) {
 
       body {
         padding: 20px 10px;
-      }
-
-      h1 {
-        font-size: 34vw;
-        line-height: 0.9;
-        letter-spacing: -0.5px;
-        width: 100%;
-        margin: 0;
-        padding: 0 2vw;
-        box-sizing: border-box;
       }
 
       .subtitle {
@@ -174,7 +159,6 @@
       .content p {
         font-size: 13px;
       }
-
     }
 
   </style>
@@ -213,9 +197,9 @@
   </div>
 
   <script>
+    // Scroll behaviour
     document.getElementById("title").addEventListener("click", () => {
       const el = document.getElementById("issue-header");
-
       if (el) {
         el.scrollIntoView({
           behavior: "smooth",
@@ -223,6 +207,30 @@
         });
       }
     });
+
+    // =========================
+    // TRUE EDGE-TO-EDGE TITLE ENGINE
+    // =========================
+
+    function fitTitle() {
+      const title = document.getElementById("title");
+
+      if (!title) return;
+
+      const parentWidth = window.innerWidth;
+      let fontSize = parentWidth / 3.2; // aggressive baseline
+
+      // clamp so it doesn't break layout
+      fontSize = Math.max(90, Math.min(fontSize, 420));
+
+      title.style.fontSize = fontSize + "px";
+    }
+
+    window.addEventListener("resize", fitTitle);
+    window.addEventListener("orientationchange", fitTitle);
+    window.addEventListener("load", fitTitle);
+
+    fitTitle();
   </script>
 
 </body>
