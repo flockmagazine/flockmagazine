@@ -19,7 +19,7 @@
     }
 
     /* =========================
-       TITLE (DESKTOP FIXED)
+       TITLE
     ========================== */
 
     h1 {
@@ -34,6 +34,7 @@
       display: block;
       width: 100%;
       transition: transform 0.25s ease;
+      cursor: pointer;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -121,13 +122,13 @@
     }
 
     /* =========================
-       MOBILE FIX (FULL WIDTH TITLE)
+       MOBILE
     ========================== */
 
     @media (max-width: 600px) {
 
       h1 {
-        font-size: 22vw;   /* nearly edge-to-edge */
+        font-size: 22vw;
         letter-spacing: 2px;
       }
 
@@ -147,7 +148,8 @@
 
 <body>
 
-  <h1>FLOCK</h1>
+  <!-- CLICKABLE TITLE -->
+  <h1 id="title">FLOCK</h1>
 
   <p class="subtitle">
     THE BIRDWATCHING MAGAZINE
@@ -155,7 +157,8 @@
 
   <div class="grid">
 
-    <a class="issue" href="issues/issue-01/">
+    <!-- LATEST ISSUE -->
+    <a class="issue" id="latest-issue" href="issues/issue-01/">
 
       <img
         class="cover"
@@ -176,6 +179,20 @@
     </a>
 
   </div>
+
+  <!-- SCROLL SCRIPT -->
+  <script>
+    document.getElementById("title").addEventListener("click", () => {
+      const el = document.getElementById("latest-issue");
+
+      if (el) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>
