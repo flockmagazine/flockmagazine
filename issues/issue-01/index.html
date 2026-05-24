@@ -29,24 +29,7 @@ body {
 }
 
 /* =========================
-   FLOCK BUTTON (TOP LEFT)
-========================= */
-
-.brand {
-  position: fixed;
-  top: 14px;
-  left: 18px;
-  font-family: "Teko", sans-serif;
-  font-size: 50px; /* 25% smaller than earlier 68px */
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--ui);
-  cursor: pointer;
-  z-index: 9999;
-}
-
-/* =========================
-   VIEWER (ZOOM CONTAINER)
+   MAGAZINE FRAME (ROUNDED)
 ========================= */
 
 .viewer {
@@ -55,45 +38,72 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform-origin: center;
 }
 
-/* =========================
-   BOOK
-========================= */
-
+/* IMPORTANT: removes white bars */
 .book {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0;
+  height: 100%;
 }
 
 /* =========================
-   PAGES
+   PAGE STYLE (NO WHITE BARS FIX)
 ========================= */
 
 .page {
-  height: 92vh;
+  display: block;
+  height: 94vh;
+  width: auto;
   max-width: 48vw;
+
   object-fit: contain;
-  background: white;
+  background: transparent;
+
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  user-select: none;
+
+  border-radius: 14px; /* rounded corners */
 }
 
-.page.left {
-  border-radius: 0 10px 10px 0;
-}
-
-.page.right {
-  border-radius: 10px 0 0 10px;
-}
+/* =========================
+   COVER SINGLE PAGE
+========================= */
 
 .cover {
   max-width: 70vw;
 }
 
 /* =========================
-   NAV BUTTONS
+   TOP FLOCK BUTTON
+========================= */
+
+.brand {
+  position: fixed;
+  top: 12px;
+  left: 18px;
+  font-family: "Teko", sans-serif;
+  font-size: 50px;
+  color: var(--ui);
+  cursor: pointer;
+  z-index: 9999;
+}
+
+/* =========================
+   COUNTER
+========================= */
+
+.counter {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  font-family: system-ui;
+  color: var(--ui);
+}
+
+/* =========================
+   NAV (DESKTOP ONLY)
 ========================= */
 
 .nav {
@@ -106,7 +116,6 @@ body {
   color: var(--ui);
   cursor: pointer;
   opacity: 0.6;
-  z-index: 9999;
 }
 
 .nav:hover { opacity: 1; }
@@ -114,31 +123,32 @@ body {
 #prev { left: 20px; }
 #next { right: 20px; }
 
-/* MOBILE NAV */
-@media (max-width: 900px) {
-  .nav {
-    bottom: 20px;
-    top: auto;
-    transform: none;
-    font-size: 22px;
-  }
-}
-
-/* COUNTER */
-.counter {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  color: var(--ui);
-  font-family: system-ui;
-}
-
 /* =========================
-   ZOOM
+   MOBILE OVERRIDES
 ========================= */
 
-.zoomed {
-  cursor: grab;
+@media (max-width: 900px) {
+
+  .brand {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .nav {
+    display: none; /* remove side buttons */
+  }
+
+  .page {
+    max-width: 100vw;
+    height: 92vh;
+    border-radius: 0; /* cleaner mobile feel */
+  }
+
+  .book {
+    flex-direction: column;
+  }
+
 }
 
 </style>
@@ -153,24 +163,24 @@ body {
 <button class="nav" id="prev" onclick="prev()">‹</button>
 <button class="nav" id="next" onclick="next()">›</button>
 
-<div class="viewer" id="viewer">
+<div class="viewer">
   <div class="book" id="book"></div>
 </div>
 
 <script>
 
 /* =========================
-   FIXED IMAGE PATH (CRITICAL)
+   PAGES
 ========================= */
 
 const pages = Array.from({ length: 19 }, (_, i) =>
-  `page-${String(i + 1).padStart(2, "0")}.jpg`
+  `page-${String(i+1).padStart(2,'0')}.jpg`
 );
 
 let current = 0;
 
 /* =========================
-   RENDER
+   RENDER (FIXED MOBILE + DESKTOP LOGIC)
 ========================= */
 
 function render() {
@@ -179,23 +189,47 @@ function render() {
   const counter = document.getElementById("counter");
 
   book.innerHTML = "";
-  counter.innerText = `${current + 1} / ${pages.length}`;
 
-  /* COVER ONLY */
-  if (current === 0) {
+  const mobile = window.innerWidth <= 900;
+
+  /* =========================
+     MOBILE: SINGLE PAGE ONLY
+  ========================= */
+
+  if (mobile) {
+
+    const img = document.createElement("img");
+    img.src = pages[current];
+    img.className = "page cover";
+
+    book.appendChild(img);
+
+    counter.innerText = `${current + 1}/${pages.length}`;
+    return;
+  }
+
+  /* =========================
+     DESKTOP: SPREADS
+  ========================= */
+
+  const isCover = current === 0;
+
+  if (isCover) {
 
     const img = document.createElement("img");
     img.src = pages[0];
     img.className = "page cover";
+
     book.appendChild(img);
 
+    counter.innerText = `1/${pages.length}`;
     return;
   }
 
-  /* SPREADS */
   const left = document.createElement("img");
   left.src = pages[current];
-  left.className = "page left";
+  left.className = "page";
+
   book.appendChild(left);
 
   const rightIndex = current + 1;
@@ -203,64 +237,61 @@ function render() {
   if (rightIndex < pages.length) {
     const right = document.createElement("img");
     right.src = pages[rightIndex];
-    right.className = "page right";
+    right.className = "page";
+
     book.appendChild(right);
+  }
+
+  /* =========================
+     COUNTER FIX (X-X/19)
+  ========================= */
+
+  const leftPage = current + 1;
+  const rightPage = rightIndex < pages.length ? rightIndex + 1 : "";
+
+  if (rightPage) {
+    counter.innerText = `${leftPage}-${rightPage}/${pages.length}`;
+  } else {
+    counter.innerText = `${leftPage}/${pages.length}`;
   }
 }
 
 /* =========================
-   NAVIGATION (FIXED COVER LOGIC)
+   NAVIGATION
 ========================= */
 
 function next() {
-  if (current === 0) current = 1;
-  else if (current < pages.length - 2) current += 2;
+
+  const mobile = window.innerWidth <= 900;
+
+  if (mobile) {
+    if (current < pages.length - 1) current++;
+  } else {
+    if (current === 0) current = 1;
+    else if (current < pages.length - 2) current += 2;
+  }
+
   render();
 }
 
 function prev() {
-  if (current === 1) current = 0;
-  else if (current > 1) current -= 2;
+
+  const mobile = window.innerWidth <= 900;
+
+  if (mobile) {
+    if (current > 0) current--;
+  } else {
+    if (current === 1) current = 0;
+    else if (current > 1) current -= 2;
+  }
+
   render();
 }
 
 /* =========================
-   PINCH + ZOOM (WORKING)
+   SWIPE (MOBILE ONLY)
 ========================= */
 
-let scale = 1;
-
-window.addEventListener("wheel", e => {
-  scale += e.deltaY * -0.0015;
-  scale = Math.min(Math.max(1, scale), 3);
-  document.getElementById("viewer").style.transform = `scale(${scale})`;
-});
-
-/* pinch zoom */
-let startDist = 0;
-
-function dist(t) {
-  return Math.hypot(
-    t[0].clientX - t[1].clientX,
-    t[0].clientY - t[1].clientY
-  );
-}
-
-window.addEventListener("touchstart", e => {
-  if (e.touches.length === 2) startDist = dist(e.touches);
-});
-
-window.addEventListener("touchmove", e => {
-  if (e.touches.length === 2) {
-    const newDist = dist(e.touches);
-    scale += (newDist - startDist) * 0.005;
-    scale = Math.min(Math.max(1, scale), 3);
-    document.getElementById("viewer").style.transform = `scale(${scale})`;
-    startDist = newDist;
-  }
-});
-
-/* swipe */
 let startX = 0;
 
 window.addEventListener("touchstart", e => {
@@ -268,7 +299,9 @@ window.addEventListener("touchstart", e => {
 });
 
 window.addEventListener("touchend", e => {
+
   const dx = e.changedTouches[0].clientX - startX;
+
   if (dx < -50) next();
   if (dx > 50) prev();
 });
