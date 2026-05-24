@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>FLOCK</title>
 
@@ -11,72 +11,55 @@
 <style>
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f1ea;
   margin: 0;
   padding: 40px 20px;
+  background: #f4f1ea;
+  font-family: Arial, sans-serif;
   color: #222;
 }
 
-/* =========================
-   TITLE
-========================== */
-
+/* TITLE */
 h1 {
   text-align: center;
-  margin: 0 auto 10px auto;
-  font-size: 198px;
-  font-weight: 700;
+  font-family: "Teko", sans-serif;
+  font-size: 160px;
+  margin: 0;
   letter-spacing: 3px;
-  text-transform: uppercase;
-  font-family: 'Teko', sans-serif;
-  line-height: 0.85;
-  width: 100%;
+  line-height: 0.9;
 }
 
-/* =========================
-   SUBTITLE
-========================== */
-
+/* SUBTITLE */
 .subtitle {
   text-align: center;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 20px;
+  margin: 10px 0 50px;
   color: #666;
-  margin: 0 auto 50px auto;
-  font-size: 25px;
-  font-family: 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
 }
 
-/* =========================
-   GRID
-========================== */
-
+/* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   max-width: 420px;
   margin: auto;
   gap: 20px;
 }
 
-/* =========================
-   ISSUE CARD
-========================== */
-
+/* ISSUE CARD */
 .issue {
   background: white;
   border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  transform-origin: center;
 }
 
 .issue:hover {
-  transform: translateY(-6px) scale(1.05);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
 }
 
 .cover {
@@ -85,31 +68,20 @@ h1 {
 }
 
 .content {
-  padding: 20px;
+  padding: 18px;
+  font-family: "IBM Plex Mono", monospace;
 }
 
 .content h2 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  font-family: 'IBM Plex Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  margin: 0 0 8px;
+  font-size: 16px;
+  letter-spacing: 2px;
 }
 
 .content p {
   margin: 0;
+  font-size: 14px;
   color: #666;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 15px;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-  h1 { font-size: 140px; }
-  .subtitle { font-size: 18px; }
-
 }
 
 </style>
@@ -118,15 +90,14 @@ h1 {
 <body>
 
 <h1>FLOCK</h1>
-
 <p class="subtitle">THE BIRDWATCHING MAGAZINE</p>
 
 <div class="grid">
 
   <a class="issue" href="issues/issue-01/">
-    <img class="cover" src="flock-issue-01-may-2026-cover-page.jpg">
+    <img class="cover" src="issues/issue-01/page-01.jpg" alt="Issue 01 Cover">
     <div class="content">
-      <h2>Issue 01</h2>
+      <h2>ISSUE 01</h2>
       <p>A Guide to Birdwatching in the UK</p>
     </div>
   </a>
