@@ -19,7 +19,7 @@
     }
 
     /* =========================
-       TITLE
+       TITLE (DESKTOP FIXED)
     ========================== */
 
     h1 {
@@ -55,6 +55,7 @@
       font-family: 'IBM Plex Mono', monospace;
       text-transform: uppercase;
       letter-spacing: 1.5px;
+      line-height: 1.2;
     }
 
     /* =========================
@@ -69,7 +70,7 @@
     }
 
     /* =========================
-       ISSUE CARD (FIXED RESPONSIVE)
+       ISSUE CARD (DESKTOP BASE)
     ========================== */
 
     .issue {
@@ -81,7 +82,6 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-
       width: 100%;
     }
 
@@ -92,7 +92,6 @@
       }
     }
 
-    /* IMAGE ALWAYS FITS SCREEN */
     .cover {
       width: 100%;
       height: auto;
@@ -121,13 +120,13 @@
     }
 
     /* =========================
-       MOBILE FIX (FULL WIDTH + FIT)
+       MOBILE FIX (CRITICAL)
     ========================== */
 
     @media (max-width: 600px) {
 
       body {
-        padding: 24px 10px;
+        padding: 20px 10px;
       }
 
       h1 {
@@ -137,15 +136,38 @@
       .subtitle {
         font-size: 5vw;
         max-width: 92vw;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
       }
 
       .grid {
         max-width: 100%;
       }
 
+      /* 🔥 KEY FIX: card always fits screen */
       .issue {
-        border-radius: 12px;
+        height: calc(100vh - 180px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .cover {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .content {
+        flex-shrink: 0;
+        padding: 14px;
+      }
+
+      .content h2 {
+        font-size: 16px;
+      }
+
+      .content p {
+        font-size: 13px;
       }
     }
 
@@ -172,7 +194,6 @@
 
       <div class="content">
 
-        <!-- SCROLL TARGET (IMPORTANT CHANGE) -->
         <h2 id="issue-header">Issue 01</h2>
 
         <p>
