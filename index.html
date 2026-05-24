@@ -14,7 +14,6 @@ body {
   margin: 0;
   padding: 40px 20px;
   background: #f4f1ea;
-  font-family: Arial, sans-serif;
 }
 
 h1 {
@@ -25,27 +24,26 @@ h1 {
   line-height: 0.9;
 }
 
+/* MOBILE TITLE FIX (BIGGER) */
+@media (max-width: 600px) {
+
+  h1 {
+    font-size: 36vw; /* 🔥 much larger, edge-to-edge feel */
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+  }
+
+}
+
 .subtitle {
   text-align: center;
   font-family: "IBM Plex Mono", monospace;
   font-size: 28px;
   margin: 10px auto 50px;
   color: #666;
-}
-
-/* MOBILE ONLY */
-@media (max-width: 600px) {
-
-  h1 {
-    font-size: 30vw;
-    letter-spacing: 1px;
-  }
-
-  .subtitle {
-    font-size: 22px;
-    padding: 0 10px;
-  }
-
 }
 
 .grid {
@@ -55,23 +53,15 @@ h1 {
 
 .issue {
   width: min(380px, 92vw);
-  background: #fff;
+  background: white;
   border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  transition: transform 0.25s ease;
 }
 
-.issue:hover {
-  transform: translateY(-6px) scale(1.03);
-}
-
-.cover {
-  width: 100%;
-  display: block;
-}
+.cover { width: 100%; display: block; }
 
 .content {
   padding: 18px;
@@ -81,7 +71,6 @@ h1 {
 .content h2 {
   margin: 0 0 6px;
   font-size: 16px;
-  letter-spacing: 2px;
 }
 
 .content p {
@@ -101,14 +90,11 @@ h1 {
 <div class="grid">
 
   <a class="issue" href="issues/issue-01/">
-
     <img class="cover" src="issues/issue-01/page-01.jpg">
-
     <div class="content">
       <h2>ISSUE 01</h2>
       <p>A Guide to Birdwatching in the UK</p>
     </div>
-
   </a>
 
 </div>
